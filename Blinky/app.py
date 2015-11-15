@@ -1,7 +1,34 @@
 from flask import Flask, jsonify, abort
 
+# Configuration
 app = Flask(__name__)
 
+# Error handling 
+class ValidationError(ValueError):
+    pass
+
+@app.errorhandler(ValidationError)
+def bad_request(e):
+    response = jsonify({'status': 400, 'error': 'bad request',
+                        'message': e.args[0]})
+    response.status_code = 400
+    return response
+
+@app.errorhandler(404)
+def not_found(e):
+    response = jsonify({'status': 404, 'error': 'not found',
+                        'message': 'invalid resource URI'})
+    response.status_code = 404
+    return response
+
+@app.errorhandler(500)
+def internal_server_error(e):
+    response = jsonify({'status': 500, 'error': 'internal server error',
+                        'message': e.args[0]})
+    response.status_code = 500
+    return response
+
+#  Api
 @app.route('/api/root/')
 def root_api():
     endpoints = [route.rule for route in app.url_map.iter_rules()
