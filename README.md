@@ -11,11 +11,10 @@ Using [GPi.GPIO](https://pypi.python.org/pypi/RPi.GPIO) library, a led light is 
  and six endpoints:
 
     1. /api/root/ : List all availiable endpoints
-    2. /api/led/pin/on/: Set led attached on 'pin' number, ON
-    3. /api/led/pin/off/: Set led attached on 'pin' number, OFF
-    4. /api/led/status/: Led current status (ON or OFF)
-    5. /api/login/: Authenticate and Login user 
-    6. /api/logout/: Logout user 
+    2. /api/led/<pin>/set/<state>/: Set led state on/off
+    3. /api/led/status/: Led current status (ON or OFF)
+    4. /api/login/: Authenticate and Login user 
+    5. /api/logout/: Logout user 
     
 
 On top of the `BlinkyApi`, [User Interface (UI)](https://en.wikipedia.org/wiki/User_interface) is handled 
