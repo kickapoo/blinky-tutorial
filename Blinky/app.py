@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 
 app = Flask(__name__)
 
@@ -8,15 +8,19 @@ def root_api():
 
 @app.route('/api/led/<int:pin>/on/')
 def set_led_on(pin):
-    return "Set led attach to {} pin ON".format(pin)
+    # Assume that GPIO setup is made
+    return jsonify(dict(message="LED is set 'ON'", pin=pin)
 
 @app.route('/api/led/<int:pin>/off/')
 def set_led_off(pin):
-    return "Set led attach to {} pin OFF".format(pin)
+    # Assume that GPIO setup is made
+    return jsonify(dict(message="LED is set 'OFF'", pin=pin)
 
 @app.route('/api/led/status/')
 def led_status():
-    return "Response led status"
+    # Led status is True (ON) / Falsw (OFF)
+    # Assume that status is always False
+    return jsonify(dict(status=False))
 
 @app.route('/api/login/')
 def login():
