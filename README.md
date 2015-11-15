@@ -38,5 +38,6 @@ Repo has the following structure:
 
   1. RaspServer: Configuration files for [Nginx](http://nginx.org/), [supervisor](http://supervisord.org/) and [Git](https://git-scm.com/) on Raspberry Pi.
   2. Blinky:  Files for `BlinkyApi` and 'BlinkyApp'.
-  3. Others:  Stand alone `Python` Script to demonstrate `Rpi.GPIO` library.
+  3. Other:  Stand alone `Python` Script to demonstrate `Rpi.GPIO` library
+             && other support files
   
