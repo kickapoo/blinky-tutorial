@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, abort
 
 app = Flask(__name__)
 
@@ -6,21 +6,20 @@ app = Flask(__name__)
 def root_api():
     return "List api endpoints"
 
-@app.route('/api/led/<int:pin>/on/')
-def set_led_on(pin):
+@app.route('/api/led/<int:pin>/set/<state>/')
+def set_led(pin, state):
     # Assume that GPIO setup is made
-    return jsonify(dict(message="LED is set 'ON'", pin=pin)
+    if state in ['off']:
+        return jsonify(dict(message="LED is set OFF", pin=pin))
+    if state in ['on']:
+        return jsonify(dict(message="LED is set ON", pin=pin))
+    return abort(404)
 
-@app.route('/api/led/<int:pin>/off/')
-def set_led_off(pin):
-    # Assume that GPIO setup is made
-    return jsonify(dict(message="LED is set 'OFF'", pin=pin)
-
-@app.route('/api/led/status/')
-def led_status():
+@app.route('/api/led/<int:pin>/status/')
+def led_status(pin):
     # Led status is True (ON) / Falsw (OFF)
     # Assume that status is always False
-    return jsonify(dict(status=False))
+    return jsonify(dict(status=False, pin=pin))
 
 @app.route('/api/login/')
 def login():
