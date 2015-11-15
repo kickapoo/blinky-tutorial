@@ -4,7 +4,9 @@ app = Flask(__name__)
 
 @app.route('/api/root/')
 def root_api():
-    return "List api endpoints"
+    endpoints = [route.rule for route in app.url_map.iter_rules()
+                 if route.endpoint !='static']
+    return jsonify(dict(api_endpoints=endpoints))
 
 @app.route('/api/led/<int:pin>/set/<state>/')
 def set_led(pin, state):
