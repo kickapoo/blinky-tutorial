@@ -1,6 +1,7 @@
 import os
 from flask import Flask, jsonify, abort
 from flask.ext.sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
 
 # Database paths 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -18,6 +19,12 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True)
     password_hash = db.Column(db.String(128))
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def verify_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
 
 # Error handling 
@@ -78,7 +85,8 @@ def logout():
 if __name__ == '__main__':
     db.create_all()
     if User.query.get(1) is None:
-        u = User(username='blinky', password_hash='blinky_pass')
+        u = User(username='blinky')
+        u.set_password('blinky')
         db.session.add(u)
         db.session.commit()
     app.run(debug=True)
