@@ -1,7 +1,16 @@
+import os
 from flask import Flask, jsonify, abort
+from flask.ext.sqlalchemy import SQLAlchemy
+
+# Database paths 
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+DB_PATH = os.path.join(BASE_DIR, '../blinky_db.sqlite')
 
 # Configuration
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + DB_PATH
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+db = SQLAlchemy(app)
 
 # Error handling 
 class ValidationError(ValueError):
@@ -59,5 +68,6 @@ def logout():
     return "Logout User"
 
 if __name__ == '__main__':
+    db.create_all()
     app.run(debug=True)
 
