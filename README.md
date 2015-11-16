@@ -8,13 +8,11 @@ A full stack web development process tutorial using [Raspberry Pi](https://www.r
 Using [GPi.GPIO](https://pypi.python.org/pypi/RPi.GPIO) library, a led light is attached on Raspeberry Pi and controlled through an api,  `BlinkyApi`.
 
 `BlinkyApi` is build with [Flask](http://flask.pocoo.org/) and has a [basic HTTP authentication](https://en.wikipedia.org/wiki/Basic_access_authentication) process 
- and six endpoints:
+ and three endpoints:
 
     1. /api/root/ : List all availiable endpoints
     2. /api/led/<pin>/set/<state>/: Set led state on/off
     3. /api/led/status/: Led current status (ON or OFF)
-    4. /api/login/: Authenticate and Login user 
-    5. /api/logout/: Logout user 
     
 
 On top of the `BlinkyApi`, [User Interface (UI)](https://en.wikipedia.org/wiki/User_interface) is handled 

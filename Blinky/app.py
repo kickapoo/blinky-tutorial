@@ -1,6 +1,7 @@
 import os
-from flask import Flask, jsonify, abort
+from flask import Flask, jsonify, abort, g
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.httpauth import HTTPBasicAuth
 from werkzeug.security import generate_password_hash, check_password_hash
 
 # Database paths 
@@ -12,6 +13,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + DB_PATH
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
+auth = HTTPBasicAuth()
 
 # Database Models
 class User(db.Model):
@@ -26,10 +28,29 @@ class User(db.Model):
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+# Authentication 
+@auth.verify_password
+def verify_password(username, password):
+    g.user = User.query.filter_by(username=username).first()
+    if g.user is None:
+        return False
+    return g.user.verify_password(password)
+
+@app.before_request
+@auth.login_required
+def before_request():
+    pass
 
 # Error handling 
 class ValidationError(ValueError):
     pass
+
+@auth.error_handler
+def unauthorized():
+    response = jsonify({'status': 401, 'error': 'authorized',
+                        'message': 'please authenticate'})
+    response.status_code = 401
+    return response
 
 @app.errorhandler(ValidationError)
 def bad_request(e):
@@ -73,14 +94,6 @@ def led_status(pin):
     # Led status is True (ON) / Falsw (OFF)
     # Assume that status is always False
     return jsonify(dict(status=False, pin=pin))
-
-@app.route('/api/login/')
-def login():
-    return "Login User"
-
-@app.route('/api/logout')
-def logout():
-    return "Logout User"
 
 if __name__ == '__main__':
     db.create_all()
