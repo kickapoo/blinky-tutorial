@@ -12,6 +12,14 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + DB_PATH
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
 
+# Database Models
+class User(db.Model):
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(64), index=True)
+    password_hash = db.Column(db.String(128))
+
+
 # Error handling 
 class ValidationError(ValueError):
     pass
@@ -69,5 +77,9 @@ def logout():
 
 if __name__ == '__main__':
     db.create_all()
+    if User.query.get(1) is None:
+        u = User(username='blinky', password_hash='blinky_pass')
+        db.session.add(u)
+        db.session.commit()
     app.run(debug=True)
 
