@@ -4,7 +4,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.httpauth import HTTPBasicAuth
 from werkzeug.security import generate_password_hash, check_password_hash
 
-# Database paths 
+# Database paths
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 DB_PATH = os.path.join(BASE_DIR, '../blinky_db.sqlite')
 
@@ -28,7 +28,7 @@ class User(db.Model):
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-# Authentication 
+# Authentication
 @auth.verify_password
 def verify_password(username, password):
     g.user = User.query.filter_by(username=username).first()
@@ -41,7 +41,7 @@ def verify_password(username, password):
 def before_request():
     pass
 
-# Error handling 
+# Error handling
 class ValidationError(ValueError):
     pass
 
@@ -74,22 +74,22 @@ def internal_server_error(e):
     return response
 
 #  Api
-@app.route('/api/root/')
+@app.route('/api/root/', methods=['GET'])
 def root_api():
     endpoints = [route.rule for route in app.url_map.iter_rules()
                  if route.endpoint !='static']
     return jsonify(dict(api_endpoints=endpoints))
 
-@app.route('/api/led/<int:pin>/set/<state>/')
+@app.route('/api/led/<int:pin>/set/<state>/', methods=['POST'])
 def set_led(pin, state):
     # Assume that GPIO setup is made
     if state in ['off']:
         return jsonify(dict(message="LED is set OFF", pin=pin))
-    if state in ['on']:
+    if state in ['on']
         return jsonify(dict(message="LED is set ON", pin=pin))
     return abort(404)
 
-@app.route('/api/led/<int:pin>/status/')
+@app.route('/api/led/<int:pin>/status/', methods=['POST'])
 def led_status(pin):
     # Led status is True (ON) / Falsw (OFF)
     # Assume that status is always False
@@ -103,4 +103,3 @@ if __name__ == '__main__':
         db.session.add(u)
         db.session.commit()
     app.run(debug=True)
-
